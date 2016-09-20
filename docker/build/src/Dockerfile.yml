@@ -1,0 +1,195 @@
+# Set the base image to CentOS(7)
+FROM centos:latest
+
+# File Author / Maintainer
+MAINTAINER Sergey Novickyi <sergeyn@migfin.com>
+
+# generate locale and set timezone
+RUN localedef --no-archive -i en_US -f UTF-8 en_US.UTF-8
+
+# LABELS
+LABEL Vendor="CentOS"
+
+# ARGS
+ARG PROJECT_NAME="Docker"
+ARG php=56
+ARG UID=0
+ARG GID=0
+ARG NODE=4.4.3
+
+# PROJECT NAME
+LABEL Project=$PROJECT_NAME
+
+# INSTALL SUDO
+RUN yum -y install sudo
+RUN groupadd sudo ; useradd -g sudo sudo
+RUN echo "sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# CREATED USER
+RUN echo $GID
+RUN echo $UID
+RUN echo $NODE
+
+RUN groupadd -g $GID docker-data ; useradd -u $UID -g $UID -G sudo docker-data
+#RUN groupadd -g mysql ; useradd -G sudo mysql
+#RUN groupadd -g postgres ; useradd -G sudo postgres
+
+# Add the ngix and PHP dependent repository
+ADD etc/nginx.repo /etc/yum.repos.d/nginx.repo
+
+# install WGET
+RUN yum -y install wget
+RUN yum -y install openssh-server openssh-client epel-release nginx tail mc systemctl
+
+# PHP
+COPY etc/$php/remi.repo /etc/yum.repos.d/
+
+## -------------------------- (METHOD ONLY UPDATE) ------------------------------
+## (before) install 5.4
+#RUN yum -y --enablerepo=remi,remi-php56 install php-fpm php-common
+#
+## inctall php components (php-mysql or php-mysqlnd)
+#RUN yum -y install php-pecl-apc php-cli php-pear php-pdo php-pgsql \
+#           php-pecl-mongo php-pecl-memcache php-pecl-memcached php-gd php-mbstring \
+#           php-mcrypt php-xml php-mysql php-intl php-zip php-iconv php-curl php-simplexml \
+#           php-geoip php-gmp php-imagick php-json php-ldap \
+#           php-pecl-apcu php-pecl-xdebug php-dom php-bcmath php-opcache ; yum clean all
+#
+## (after) install php5.6
+#RUN rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+#RUN yum -y install yum-plugin-replace
+#RUN yum -y replace php-common --replace-with=php56w-common --skip-broken
+#RUN yum -y install php56w-fpm php56w-common php56w-opcache
+#
+#RUN php --version
+
+## --------------------------- END -------------------------------
+
+## ------------------------------- INSTALLING -----------------------
+RUN yum install php-fpm php-common -y --enablerepo=remi-php$php
+RUN yum -y install php-pecl-apc php-cli php-pear php-pdo php-pgsql \
+           php-pecl-mongo php-pecl-memcache php-pecl-memcached php-gd php-mbstring \
+           php-mcrypt php-xml php-mysql php-intl php-zip php-iconv php-curl php-simplexml \
+           php-geoip php-gmp php-imagick php-json php-ldap \
+           php-pecl-apcu php-pecl-xdebug php-dom php-bcmath php-opcache --enablerepo=remi-php$php
+RUN yum clean all
+## ------------------------------- END --------------------
+
+# Install LDAP
+RUN yum -y install openldap-servers openldap-clients libldap2-dev libssl-dev
+
+# install sshd
+RUN yum -y install pwgen && \
+    rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
+    ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_ecdsa_key && \
+    ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
+    sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
+
+# Install composer
+RUN yum install git -y
+RUN curl -sS https://getcomposer.org/installer | php \
+        && mv composer.phar /usr/local/bin/composer
+RUN chmod +x /usr/local/bin/composer
+
+#Install nodejs (link: https://hub.docker.com/_/node/ used docker hub node versions).
+RUN set -ex \
+  && for key in \
+    9554F04D7259F04124DE6B476D5A82AC7E37093B \
+    94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
+    0034A06D9D9B0064CE8ADF6BF1747F4AD2306D93 \
+    FD3A5288F042B6850C66B31F09FE44734EB7990E \
+    71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
+    DD8F2338BAE7501E3DD5AC78C273792F7D83545D \
+    B9AE9905FFD7803F25714661B63B535A4C206CA9 \
+    C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
+  ; do \
+    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+  done
+
+RUN curl -SLO "https://nodejs.org/dist/v$NODE/node-v$NODE-linux-x64.tar.xz" \
+  && curl -SLO "https://nodejs.org/dist/v$NODE/SHASUMS256.txt.asc" \
+  && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
+  && grep " node-v$NODE-linux-x64.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+  && tar -xJf "node-v$NODE-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
+  && rm "node-v$NODE-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
+
+#Install NPM
+RUN yum -y install npm
+
+#Install CRONTAB
+RUN yum -y install cronie
+
+# RUNS add programs
+RUN yum install -y vim
+
+# SSH service
+RUN mkdir /var/run/sshd
+#chanche 'passwd' to your secret password
+RUN echo "docker-data:passwd" | chpasswd
+RUN echo "docker-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN echo "root:passwd" | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+# Install mkdir
+RUN mkdir -p /var/run/sshd /var/log/supervisor
+
+## Adding the configuration file
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/default.conf /etc/nginx/conf.d/default.conf
+COPY conf/supervisord.conf /etc/
+COPY conf/php.ini /etc/php.ini
+COPY conf/php-fpm.conf /etc/php-fpm.conf
+COPY conf/www.conf /etc/php-fpm.d/www.conf
+
+# Enabling session files
+RUN mkdir -p /tmp/sessions/
+RUN chown docker-data.docker-data /tmp/sessions -Rf
+
+# Installing supervisor
+RUN yum install -y python-setuptools
+RUN easy_install pip
+RUN pip install supervisor
+
+#RUN supervisor
+RUN /usr/bin/easy_install supervisor
+RUN /usr/bin/easy_install supervisor-stdout
+
+# CREATED RUN php-fm
+RUN mkdir -p /etc/service
+RUN mkdir -p /etc/service/nginx
+ADD etc/nginx.sh /etc/service/nginx/run
+RUN chmod +x /etc/service/nginx/run
+RUN mkdir -p /etc/service/php5fpm
+ADD etc/start.sh /etc/service/php5fpm/run
+RUN chmod +x /etc/service/php5fpm/run
+
+# PORTS
+EXPOSE 22 9000
+
+# ADD
+ADD ./scripts /scripts
+#ADD ./ /var/www
+
+# CLEAR CACHE
+RUN yum clean all
+# && rm -rf /tmp/* /var/tmp/*
+
+USER docker-data
+
+# WOKED DIRECTORY
+WORKDIR /var/www
+
+# Volumes
+#VOLUME ["/var/www", "/etc/nginx/conf.d"]
+# "/var/www",
+
+# RUN COMMANDS
+CMD ["/bin/bash", "/scripts/run.sh"]
+
+#CMD ["start"]
+#CMD ["nginx"]
+#CMD ["mysql"]
+#CMD ["node"]

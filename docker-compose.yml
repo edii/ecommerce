@@ -1,0 +1,99 @@
+version: '2'
+services:
+  web:
+    build:
+      context: ./docker/build/src/
+      dockerfile: Dockerfile.yml
+      args:
+        - php=56 # (54|55|56|70)
+        - UID=1086800073
+        - GID=1086800073
+        - NODE=4.4.3 # (0.10.44|0.12.13|0.12|0.10|4.4.3|4.4|4|5.10.1|5.10|5|latest)
+    restart: always
+    privileged: false
+    stdin_open: true
+    tty: true
+    container_name: symfony_web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9000:9000"
+      - "2225:22"
+    links:
+      - redis:redis
+      - symfony_db:mysql
+      - rabbitmq:rabbitmq
+    volumes:
+      # system
+      - ./:/var/www:rw
+      - ./tmp:/var/www/tmp:rw
+      - ./docker/conf/php.ini:/etc/php.ini:rw
+      - ./docker/conf/custom.sh:/scripts/custom.sh:rw
+      - ./docker/conf/docker.conf:/etc/nginx/conf.d/docker.conf:rw
+      - ./docker/conf/.ssh:/root/.ssh:rw
+    extra_hosts:
+      - "magento.dev:127.0.0.1"
+    depends_on:
+      - redis
+      - symfony_db
+      - rabbitmq
+    dns:
+      - 8.8.8.8
+      - 192.168.70.217
+    environment:
+      - COMPOSE_PROJECT_NAME=magento
+      - DEBUG=true
+      - RACK_ENV=development
+      - SHOW=true
+      - SESSION_SECRET
+
+  # phpmyadmin
+  symfony_myadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: symfony_myadmin
+    restart: always
+    links:
+      - symfony_db:mysql
+    ports:
+      - "8084:80"
+    expose:
+      - "8084"
+    environment:
+      - PMA_ARBITRARY=1
+
+  # mysqls
+  symfony_db:
+    image: mysql:latest
+    container_name: symfony_mysql
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql:rw
+      - ./mysql/log/mysql.log:/var/log/mysqld.log
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  # others
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: symfony_rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq/mnesia
+      - ./rabbitmq/log:/var/log/rabbitmq
+    environment:
+      - HOSTNAME=rabbitmq
+
+  redis:
+    image: redis
+    container_name: symfony_redis
+    volumes:
+      - ./docker/conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/data:/data
+    ports:
+      - "6379:6379"
+    command: ["redis-server","--appendonly yes"]
