@@ -26,6 +26,16 @@ class AppKernel extends Kernel
             new Oneup\UploaderBundle\OneupUploaderBundle(),
             new Presta\SitemapBundle\PrestaSitemapBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
+            new SmartCore\Bundle\AcceleratorCacheBundle\AcceleratorCacheBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
+            new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
+            new Oneup\FlysystemBundle\OneupFlysystemBundle(),
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
