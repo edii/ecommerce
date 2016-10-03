@@ -22,6 +22,7 @@
         <thead>
         <tr>
             <th class="col-md-1">{{ knp_pagination_sortable(entities, 'Name'|trans, 'c.name') }}</th>
+            <th class="col-md-1">{{ knp_pagination_sortable(entities, 'Parent'|trans, 'c.parent.name') }}</th>
             <th class="col-md-9">{{ knp_pagination_sortable(entities, 'Description'|trans, 'c.description') }}</th>
             <th class="col-md-1">{{ knp_pagination_sortable(entities, 'Photo'|trans, 'c.path') }}</th>
             <th class="col-md-1">{{ 'Actions'|trans }}</th>
@@ -32,6 +33,15 @@
             <tr>
                 <td>
                     <a href="{{ path('admin_category_show', { 'id': entity.id }) }}">{{ entity.name }}</a>
+                </td>
+                <td>
+                    {% if entity.parent %}
+                        <a href="{{ path('admin_category_show', { 'id': entity.parent.id }) }}">
+                            {{ entity.parent }}
+                        </a>
+                    {% else %}
+                        -
+                    {% endif %}
                 </td>
                 <td>
                     {{ entity.description|slice(0,300) }}...

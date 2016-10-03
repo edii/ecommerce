@@ -8,10 +8,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Category
  *
+ * @Gedmo\Tree(type="nested")
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Eshop\ShopBundle\Repository\CategoryRepository")
  * @UniqueEntity("slug"),
@@ -67,11 +69,38 @@ class Category
     private $metaDescription;
 
     /**
+     * @Gedmo\TreeLeft
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $lft;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $lvl;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $rgt;
+
+    /**
+     * @Gedmo\TreeRoot
+     * @ORM\ManyToOne(targetEntity="Category")
+     * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $root;
+
+    /**
      * @ORM\OneToMany(targetEntity="Category", mappedBy="parent")
+     * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
 
     /**
+     * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
@@ -96,6 +125,7 @@ class Category
      *
      * @var string
      *
+     * @Gedmo\TreePath
      * @ORM\Column(type="text", length=255, nullable=true)
      */
     protected $path;
@@ -519,5 +549,81 @@ class Category
     public function getDateUpdated()
     {
         return $this->dateUpdated;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLft()
+    {
+        return $this->lft;
+    }
+
+    /**
+     * @param mixed $lft
+     * @return Category
+     */
+    public function setLft($lft)
+    {
+        $this->lft = $lft;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+    /**
+     * @param mixed $lvl
+     * @return Category
+     */
+    public function setLvl($lvl)
+    {
+        $this->lvl = $lvl;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRgt()
+    {
+        return $this->rgt;
+    }
+
+    /**
+     * @param mixed $rgt
+     * @return Category
+     */
+    public function setRgt($rgt)
+    {
+        $this->rgt = $rgt;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    /**
+     * @param mixed $root
+     * @return Category
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+
+        return $this;
     }
 }

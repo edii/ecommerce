@@ -17,10 +17,24 @@ class LayoutsUtilityController extends Controller
         $settings = $this->get('app.site_settings');
         $showEmpty = $settings->getShowEmptyCategories();
 
-        $categories = $categoryRepository->getAllCategories($showEmpty);
+        $options = array(
+            'decorate' => true,
+            'rootOpen' => '<ul>',
+            'rootClose' => '</ul>',
+            'childOpen' => '<li>',
+            'childClose' => '</li>',
+            'nodeDecorator' => function($node) {
+                return '<a href="'.$this->generateUrl('category', ['slug' => $node['slug']]).'">'.$node['name'].'</a>';
+            }
+        );
+        $htmlTree = $categoryRepository->childrenHierarchy(
+            null,
+            false,
+            $options
+        );
 
         return $this->render('ShopBundle:Partials:categoriesMenu.html.twig',
-            array('categories' => $categories));
+            array('htmlTree' => $htmlTree));
     }
 
     /**
