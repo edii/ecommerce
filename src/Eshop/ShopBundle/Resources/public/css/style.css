@@ -2,6 +2,21 @@ body {
     /*min-height: 2000px;*/
 }
 
+/* Category LIST */
+.list-group ul {
+    list-style: none;
+    margin-left: 0px;
+    padding: 0px;
+}
+
+.list-group ul li {
+    padding-top: 10px;
+}
+
+.list-group ul > li > ul li {
+    margin-left: 5px;
+}
+
 .navbar-static-top {
     margin-bottom: 19px;
 }

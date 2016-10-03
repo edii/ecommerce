@@ -14,6 +14,24 @@ use Doctrine\ORM\QueryBuilder;
  */
 class CategoryRepository extends NestedTreeRepository
 {
+    public function getAllTreeQB($showEmpty = true, $sort = 'name', $order = 'ASC')
+    {
+        $qb = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('c')
+            ->from('ShopBundle:Category', 'c');
+
+        if (!$showEmpty) {
+            $qb->innerJoin('c.products', 'p')
+                ->andWhere('p.quantity <> 0');
+        }
+
+        $qb->orderBy('c.' . $sort, $order);
+        $qb->orderBy('c.root, c.lft', 'ASC');
+
+        return $qb->getQuery();
+    }
+
     /**
      * @param bool $showEmpty
      * @param string $order

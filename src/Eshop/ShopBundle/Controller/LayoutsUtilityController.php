@@ -14,27 +14,38 @@ class LayoutsUtilityController extends Controller
         $em = $this->getDoctrine()->getManager();
         $categoryRepository = $em->getRepository('ShopBundle:Category');
 
-        $settings = $this->get('app.site_settings');
-        $showEmpty = $settings->getShowEmptyCategories();
+        // $settings = $this->get('app.site_settings');
+        // $showEmpty = $settings->getShowEmptyCategories();
 
-        $options = array(
-            'decorate' => true,
-            'rootOpen' => '<ul>',
-            'rootClose' => '</ul>',
-            'childOpen' => '<li>',
-            'childClose' => '</li>',
-            'nodeDecorator' => function($node) {
-                return '<a href="'.$this->generateUrl('category', ['slug' => $node['slug']]).'">'.$node['name'].'</a>';
-            }
-        );
+//        $options = array('decorate' => false);
+//        $tree = $categoryRepository->buildTree($categoryRepository->getAllTreeQB()->getArrayResult(), $options);
+//
+//        echo "<pre>";
+//        var_dump($tree);
+//        echo "</pre>";
+
         $htmlTree = $categoryRepository->childrenHierarchy(
             null,
             false,
-            $options
+            [
+                'decorate' => true,
+                'rootOpen' => '<ul>',
+                'rootClose' => '</ul>',
+                'childOpen' => '<li>',
+                'childClose' => '</li>',
+                'nodeDecorator' => function($node) {
+                    $href = $this->generateUrl('category', ['slug' => $node['slug']]);
+                    return '<a href="'.$href.'" class="list-group-item menu-link">'.$node['name'].'</a>';
+                }
+            ]
         );
 
-        return $this->render('ShopBundle:Partials:categoriesMenu.html.twig',
-            array('htmlTree' => $htmlTree));
+        return $this->render(
+            'ShopBundle:Partials:categoriesMenu.html.twig',
+            [
+                'htmlTree' => $htmlTree,
+            ]
+        );
     }
 
     /**
