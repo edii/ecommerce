@@ -32,6 +32,16 @@ class Discount
      */
     private $type;
 
+    /**
+     * @ORM\Column(name="period_from", type="datetime", nullable=true)
+     */
+    private $periodFrom;
+
+    /**
+     * @ORM\Column(name="period_to", type="datetime", nullable=true)
+     */
+    private $periodTo;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -71,6 +81,44 @@ class Discount
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodFrom()
+    {
+        return $this->periodFrom;
+    }
+
+    /**
+     * @param mixed $periodFrom
+     * @return $this
+     */
+    public function setPeriodFrom(\DateTime $periodFrom)
+    {
+        $this->periodFrom = $periodFrom;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodTo()
+    {
+        return $this->periodTo;
+    }
+
+    /**
+     * @param mixed $periodTo
+     * @return $this
+     */
+    public function setPeriodTo(\DateTime $periodTo)
+    {
+        $this->periodTo = $periodTo;
 
         return $this;
     }
