@@ -66,10 +66,6 @@ services:
         class:        Eshop\ShopBundle\Service\EmailNotifier
         arguments:    ["@swiftmailer.mailer", "@router", "@templating"]
 
-    app.site_settings:
-        class:        Eshop\ShopBundle\Service\SettingsService
-        arguments:    ["@doctrine.orm.entity_manager"]
-
     app.page_utilities:
         class:        Eshop\ShopBundle\Service\PagesUtilities
         arguments:    ["@doctrine.orm.entity_manager"]

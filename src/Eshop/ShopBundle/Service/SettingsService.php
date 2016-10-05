@@ -3,6 +3,7 @@ namespace Eshop\ShopBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Eshop\ShopBundle\Entity\Settings;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SettingsService
 {
@@ -16,11 +17,23 @@ class SettingsService
      */
     private $em;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * Container
+     *
+     * @var
+     */
+    private $container;
+
+    /**
+     * SettingsService constructor.
+     * @param EntityManager $entityManager
+     * @param ContainerInterface $container
+     */
+    public function __construct(EntityManager $entityManager, $container)
     {
         $this->em = $entityManager;
-        $allSettings = $this->em->getRepository('ShopBundle:Settings')->findAll();
-        $this->settings = $allSettings[0];
+        $this->container = $container;
+        $this->settings = $this->em->getRepository('ShopBundle:Settings')->findOneByResult();
     }
 
     /**
@@ -35,5 +48,12 @@ class SettingsService
      */
     public function getShowEmptyCategories(){
         return $this->settings->getShowEmptyCategories();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getDefaultCurrency(){
+        return $this->settings->getDefaultCurrency();
     }
 }

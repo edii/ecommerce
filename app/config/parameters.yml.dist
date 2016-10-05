@@ -35,6 +35,8 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            3351b4f958888440521a4079605079bf831c7888
     locale: en
+    currency: usd
+    currency_symbol: '$'
     my_locale: en
     products_pagination_count: 12
     admin_products_pagination_count: 20

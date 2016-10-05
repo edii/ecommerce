@@ -35,6 +35,12 @@ class Settings
      */
     private $showEmptyManufacturers;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="default_currency", type="string", nullable=true)
+     */
+    private $defaultCurrency;
 
     /**
      * Get id
@@ -90,5 +96,24 @@ class Settings
     public function getShowEmptyManufacturers()
     {
         return $this->showEmptyManufacturers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultCurrency()
+    {
+        return $this->defaultCurrency;
+    }
+
+    /**
+     * @param string $defaultCurrency
+     * @return $this
+     */
+    public function setDefaultCurrency($defaultCurrency)
+    {
+        $this->defaultCurrency = $defaultCurrency;
+
+        return $this;
     }
 }

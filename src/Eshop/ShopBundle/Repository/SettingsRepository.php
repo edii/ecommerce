@@ -3,6 +3,7 @@
 namespace Eshop\ShopBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Eshop\ShopBundle\RepositoryTraits\FindOneTrait;
 
 /**
  * SettingsRepository
@@ -12,4 +13,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class SettingsRepository extends EntityRepository
 {
+    use FindOneTrait;
 }

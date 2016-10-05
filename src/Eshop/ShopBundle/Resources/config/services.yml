@@ -1,0 +1,6 @@
+services:
+  app.site_settings:
+    class: Eshop\ShopBundle\Service\SettingsService
+    arguments:
+      - "@doctrine.orm.entity_manager"
+      - "@service_container"

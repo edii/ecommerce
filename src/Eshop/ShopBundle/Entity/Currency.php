@@ -30,6 +30,13 @@ class Currency
     /**
      * @var string
      *
+     * @ORM\Column(name="symbol", type="string", length=255, nullable=false, unique=true)
+     */
+    private $symbol;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="exchange_rate", type="float", nullable=false)
      */
     private $exchangeRate = 0.0;
@@ -83,6 +90,25 @@ class Currency
     public function setExchangeRate($rate)
     {
         $this->exchangeRate = $rate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSymbol()
+    {
+        return $this->symbol;
+    }
+
+    /**
+     * @param string $symbol
+     * @return $this
+     */
+    public function setSymbol($symbol)
+    {
+        $this->symbol = $symbol;
 
         return $this;
     }

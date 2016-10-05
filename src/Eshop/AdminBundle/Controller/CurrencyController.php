@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * Currency controller.
  *
- * @Route("/admin/settings")
+ * @Route("/admin/currency")
  */
 class CurrencyController extends Controller
 {
