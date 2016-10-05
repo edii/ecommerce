@@ -16,6 +16,9 @@
         <thead>
         <tr>
             <th class="col-md-2">{{ knp_pagination_sortable(entities, 'Name'|trans, 'name') }}</th>
+            <th class="col-md-2">{{ knp_pagination_sortable(entities, 'Code'|trans, 'code') }}</th>
+            <th class="col-md-2">{{ knp_pagination_sortable(entities, 'Exchange Rate'|trans, 'exchangeRate') }}</th>
+            <th class="col-md-2">{{ 'Enabled'|trans }}</th>
             <th class="col-md-2">{{ 'Actions'|trans }}</th>
         </tr>
         </thead>
@@ -23,6 +26,9 @@
         {% for entity in entities %}
             <tr data-id="{{ entity.id }}">
                 <td><a href="{{ path('admin_currency_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+                <td><a href="{{ path('admin_currency_show', { 'id': entity.id }) }}">{{ entity.code }}</a></td>
+                <td>{{ entity.exchangeRate }}</td>
+                <td>{{ entity.enabled | enabled }}</td>
                 <td>
                     <a href="{{ path('admin_currency_show', { 'id': entity.id }) }}">{{ 'show'|trans }}</a><br>
                     <a href="{{ path('admin_currency_edit', { 'id': entity.id }) }}">{{ 'edit'|trans }}</a><br>

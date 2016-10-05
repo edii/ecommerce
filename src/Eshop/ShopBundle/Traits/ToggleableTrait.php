@@ -5,6 +5,14 @@ namespace Eshop\ShopBundle\Traits;
 trait ToggleableTrait
 {
     /**
+     * @var array $enable
+     */
+    public static $enableStatus = [
+        true => 'Enabled',
+        false => 'Disabled',
+    ];
+
+    /**
      * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     protected $enabled = true;
@@ -46,5 +54,10 @@ trait ToggleableTrait
         $this->enabled = false;
 
         return $this;
+    }
+
+    public static function getEnabledStatus($enabled)
+    {
+        return (isset(self::$enableStatus[$enabled]))?self::$enableStatus[$enabled]:'Disabled';
     }
 }
