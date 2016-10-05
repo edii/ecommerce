@@ -58,7 +58,6 @@ class LayoutsUtilityController extends Controller
 
         $settings = $this->get('app.site_settings');
         $showEmpty = $settings->getShowEmptyManufacturers();
-
         $manufacturers = $manufacturerRepository->getAllManufacturers($showEmpty);
 
         return $this->render('ShopBundle:Partials:manufacturersMenu.html.twig',

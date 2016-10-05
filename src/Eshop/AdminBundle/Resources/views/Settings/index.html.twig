@@ -1,75 +1,105 @@
 {% extends '@Admin/adminLayout.html.twig' %}
 
 {% block page_content -%}
-    <h3>{{ 'Settings list'|trans }}</h3>
-    <table class="records_list table table-striped">
-        <tbody>
-        <tr>
-            <th class="col-md-10">
-                {{ 'Show empty categories'|trans }}
-            </th>
-            <td data-setting="show_empty_categories" class="col-md-2">
-                <input type="checkbox" class="checkbox pull-left"
-                       {% if settings.showEmptyCategories %}checked{% endif %}>
-                &nbsp;
-                <button type="button" class="btn save-btn" style="display: none">
-                    <span class="glyphicon glyphicon-floppy-disk"></span>
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                {{ 'Show empty manufacturers'|trans }}
-            </th>
-            <td data-setting="show_empty_manufacturers">
-                <input type="checkbox" class="checkbox pull-left"
-                       {% if settings.showEmptyManufacturers %}checked{% endif %}>
-                &nbsp;
-                <button type="button" class="btn save-btn" style="display: none">
-                    <span class="glyphicon glyphicon-floppy-disk"></span>
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+        <h3>{{ 'Settings list'|trans }}</h3>
+
+    <div id="boxSettings">
+        <div class="container-fluid">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                {{ form_start(form) }}
+
+                <div class="form-group">
+                    {{ form_label(form.showEmptyCategories, 'showEmptyCategories'|trans) }}
+                    {{ form_widget(form.showEmptyCategories, {'attr': {'class': 'setting-showEmptyCategories'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.showEmptyManufacturers, 'showEmptyManufacturers'|trans) }}
+                    {{ form_widget(form.showEmptyManufacturers, {'attr': {'class': 'settings-showEmptyManufacturers'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.defaultCurrency, 'defaultCurrency'|trans) }}
+                    {{ form_widget(form.defaultCurrency, {'attr': {'class': 'settings-defaultCurrency'}}) }}
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <input type="submit" value="{{ 'Edit'|trans }}" class="btn btn-warning"/>
+                </div>
+
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+    </div>
+        {#<table class="records_list table table-striped">#}
+            {#<tbody>#}
+            {#<tr>#}
+                {#<th class="col-md-10">#}
+                    {#{{ 'Show empty categories'|trans }}#}
+                {#</th>#}
+                {#<td data-setting="show_empty_categories" class="col-md-2">#}
+                    {#<input type="checkbox" class="checkbox pull-left"#}
+                           {#{% if settings.showEmptyCategories %}checked{% endif %}>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>#}
+                    {#{{ 'Show empty manufacturers'|trans }}#}
+                {#</th>#}
+                {#<td data-setting="show_empty_manufacturers">#}
+                    {#<input type="checkbox" class="checkbox pull-left"#}
+                           {#{% if settings.showEmptyManufacturers %}checked{% endif %}>#}
+                {#</td>#}
+            {#</tr>#}
+            {#</tbody>#}
+        {#</table>#}
+        {#<button type="button" class="btn save-btn" style="display: none">#}
+            {#<span class="glyphicon glyphicon-floppy-disk"></span>#}
+        {#</button>#}
 {% endblock page_content %}
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        $(function () {
-            $(".checkbox").change(function (e) {
-                e.preventDefault();
-                //show save button
-                $(this).parent().parent().find(".save-btn").show();
-            });
+    {#<script>#}
+        {#$(function () {#}
+            {#$(".checkbox").change(function (e) {#}
+                {#e.preventDefault();#}
+                {#//show save button#}
+                {#$(this).parents('div#boxSettings').find(".save-btn").show();#}
+            {#});#}
 
-            $(".save-btn").on("click", function (e) {
-                e.preventDefault();
-                var saveButton = $(this);
-                var checkbox = $(this).parent().find('.checkbox');
-                var setting = $(this).parent().data('setting');
-                var newValueInt = 0;
-                if (checkbox.is(":checked")) {
-                    newValueInt = 1;
-                }
+            {#$(".save-btn").on("click", function (e) {#}
+                {#e.preventDefault();#}
+                {#var saveButton = $(this);#}
+                {#var checkbox = $(this).parents('div#boxSettings').find('.checkbox');#}
+                {#var setting = $(this).parents('div#boxSettings').data('setting');#}
 
-                $.ajax({
-                    type: 'post',
-                    url: '{{ path('admin_settings_edit') }}',
-                    data: {
-                        editing_setting: setting,
-                        new_value: newValueInt
-                    },
-                    async: false,
-                    success: function (data) {
-                        if (data.success === true) {
-                            saveButton.hide();
-                        }
-                    },
-                    error: function () {
-                    }
-                });
-            });
-        });
-    </script>
+                {#var newValueInt = 0;#}
+                {#if (checkbox.is(":checked")) {#}
+                    {#newValueInt = 1;#}
+                {#}#}
+
+                {#$.ajax({#}
+                    {#type: 'post',#}
+                    {#url: '{{ path('admin_settings_edit') }}',#}
+                    {#data: {#}
+                        {#editing_setting: setting,#}
+                        {#new_value: newValueInt#}
+                    {#},#}
+                    {#async: false,#}
+                    {#success: function (data) {#}
+                        {#if (data.success === true) {#}
+                            {#saveButton.hide();#}
+                        {#}#}
+                    {#},#}
+                    {#error: function () {#}
+                    {#}#}
+                {#});#}
+            {#});#}
+        {#});#}
+    {#</script>#}
 {% endblock javascripts %}

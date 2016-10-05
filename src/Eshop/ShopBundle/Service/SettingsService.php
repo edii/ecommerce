@@ -2,6 +2,7 @@
 namespace Eshop\ShopBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Eshop\ShopBundle\Entity\Currency;
 use Eshop\ShopBundle\Entity\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -54,6 +55,14 @@ class SettingsService
      * @return bool
      */
     public function getDefaultCurrency(){
+
+        if ($this->settings->getDefaultCurrency() === null) {
+            $currency = new Currency();
+            $currency->setCode($this->container->getParameter('currency'));
+            $currency->setSymbol($this->container->getParameter('currency_symbol'));
+            $this->settings->setDefaultCurrency($currency);
+        }
+
         return $this->settings->getDefaultCurrency();
     }
 }

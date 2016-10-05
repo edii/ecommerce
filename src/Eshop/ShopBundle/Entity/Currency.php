@@ -2,6 +2,7 @@
 
 namespace Eshop\ShopBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Eshop\ShopBundle\Traits\TimestampableTrait;
 use Eshop\ShopBundle\Traits\ToggleableTrait;
@@ -17,8 +18,17 @@ use Eshop\ShopBundle\Traits\NameTrait;
  */
 class Currency
 {
-    use IdTrait, NameTrait;
+    use NameTrait;
     use TimestampableTrait, ToggleableTrait;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     /**
      * @var string
@@ -30,7 +40,7 @@ class Currency
     /**
      * @var string
      *
-     * @ORM\Column(name="symbol", type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(name="symbol", type="string", length=255, nullable=true, unique=true)
      */
     private $symbol;
 
@@ -41,9 +51,18 @@ class Currency
      */
     private $exchangeRate = 0.0;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Eshop\ShopBundle\Entity\Settings",
+     *     mappedBy="defaultCurrency"
+     * )
+     */
+    private $setting;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->setting = new ArrayCollection();
     }
 
     /**
@@ -52,6 +71,16 @@ class Currency
     public function __toString()
     {
         return $this->code;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -109,6 +138,25 @@ class Currency
     public function setSymbol($symbol)
     {
         $this->symbol = $symbol;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSetting()
+    {
+        return $this->setting;
+    }
+
+    /**
+     * @param mixed $setting
+     * @return $this;
+     */
+    public function setSetting($setting)
+    {
+        $this->setting = $setting;
 
         return $this;
     }

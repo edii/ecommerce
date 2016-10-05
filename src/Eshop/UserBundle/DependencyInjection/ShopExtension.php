@@ -1,6 +1,6 @@
 <?php
 
-namespace Eshop\AdminBundle\DependencyInjection;
+namespace Eshop\UserBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

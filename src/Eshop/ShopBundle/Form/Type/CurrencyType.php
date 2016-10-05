@@ -22,6 +22,7 @@ class CurrencyType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('code', TextType::class)
+            ->add('symbol', TextType::class)
             ->add('exchangeRate', NumberType::class)
             ->add('enabled', CheckboxType::class, [
                 'label' => 'Enabled',

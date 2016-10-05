@@ -29,10 +29,18 @@ class SettingsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $settingRepository = $em->getRepository('ShopBundle:Settings');
-        $entities = $settingRepository->findAll();
 
+        $setting = new Settings();
+        if ($entity = $settingRepository->findOneByResult()) {
+            $setting = $entity;
+        }
+
+        $form = $this->createForm(
+            'Eshop\ShopBundle\Form\Type\SettingType',
+            $setting
+        );
         return array(
-            'settings' => $entities[0]
+            'form' => $form->createView()
         );
     }
 
@@ -46,29 +54,45 @@ class SettingsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $settingRepository = $em->getRepository('ShopBundle:Settings');
-        $entities = $settingRepository->findAll();
-        /**
-         * @var Settings $settings
-         */
-        $settings = $entities[0];
+        $data = $request->get('setting');
 
-
-        $editingSetting = $request->get('editing_setting');
-        $newValue = $request->request->getBoolean('new_value');
-
-        switch ($editingSetting) {
-            case 'show_empty_categories';
-                $settings->setShowEmptyCategories($newValue);
-                break;
-            case 'show_empty_manufacturers';
-                $settings->setShowEmptyManufacturers($newValue);
-                break;
+        $setting = new Settings();
+        if ($data['id']) {
+            $setting = $settingRepository->findOneBy(['id' => $data['id']]);
         }
 
-        $em->flush();
+        var_dump($setting);
+        die('stop');
 
-        return new JsonResponse(
-            array('success' => true)
-        );
+
+//        $em = $this->getDoctrine()->getManager();
+//        $settingRepository = $em->getRepository('ShopBundle:Settings');
+//
+//        die(var_dump($request->request->all()));
+//
+//        $entities = $settingRepository->findAll();
+//        /**
+//         * @var Settings $settings
+//         */
+//        $settings = $entities[0];
+//
+//
+//        $editingSetting = $request->get('editing_setting');
+//        $newValue = $request->request->getBoolean('new_value');
+//
+//        switch ($editingSetting) {
+//            case 'show_empty_categories';
+//                $settings->setShowEmptyCategories($newValue);
+//                break;
+//            case 'show_empty_manufacturers';
+//                $settings->setShowEmptyManufacturers($newValue);
+//                break;
+//        }
+//
+//        $em->flush();
+//
+//        return new JsonResponse(
+//            array('success' => true)
+//        );
     }
 }

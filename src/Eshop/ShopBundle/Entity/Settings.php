@@ -36,9 +36,11 @@ class Settings
     private $showEmptyManufacturers;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="default_currency", type="string", nullable=true)
+     * @ORM\ManyToOne(
+     *     targetEntity="Eshop\ShopBundle\Entity\Currency",
+     *     inversedBy="setting"
+     * )
+     * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
      */
     private $defaultCurrency;
 

@@ -32,6 +32,13 @@
     </div>
 
     <div class="form-group">
+        {{ form_label(edit_form.symbol, 'Symbol'|trans) }}
+        <div class="col-sm-10">
+            {{ form_widget(edit_form.symbol, {'attr': {'class': 'currency-symbol'}}) }}
+        </div>
+    </div>
+
+    <div class="form-group">
         {{ form_label(edit_form.exchangeRate, 'Exchange Rate'|trans) }}
         <div class="col-sm-10">
             {{ form_widget(edit_form.exchangeRate, {'attr': {'class': 'currency-exchange-rate'}}) }}

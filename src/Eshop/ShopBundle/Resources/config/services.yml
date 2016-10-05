@@ -4,3 +4,10 @@ services:
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@service_container"
+
+  shop.settings.form:
+    class: Eshop\ShopBundle\Form\Type\SettingType
+    arguments:
+        - "@router"
+    tags:
+        - { name: form.type }
