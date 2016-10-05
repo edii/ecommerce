@@ -2,6 +2,7 @@
 
 namespace Eshop\ShopBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -151,6 +152,31 @@ class Product
      */
     private $featured;
 
+//    /**
+//     * @var Price
+//     */
+//    protected $buyPrice;
+//
+//    /**
+//     * @var TaxInterface
+//     */
+//    protected $buyPriceTax;
+//
+//    /**
+//     * @var DiscountablePrice
+//     */
+//    protected $sellPrice;
+//
+//    /**
+//     * @var TaxInterface
+//     */
+//    protected $sellPriceTax;
+
+    /**
+     * @var Collection
+     */
+    protected $variants;
+
     public function __construct()
     {
         $this->dateCreated = new \DateTime();
@@ -160,6 +186,7 @@ class Product
         $this->favourites = new ArrayCollection();
         $this->quantity = 1;
         $this->deleted = false;
+        $this->variants = new ArrayCollection();
     }
 
     public function __toString()

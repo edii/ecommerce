@@ -37,4 +37,7 @@
     <li {% if app.request.get('_route') == 'admin_settings' %} class="active" {% endif %}>
         <a href="{{ path('admin_settings') }}">{{ 'Site settings'|trans }}</a>
     </li>
+    <li {% if app.request.get('_route') == 'admin_currency' %} class="active" {% endif %}>
+        <a href="{{ path('admin_currency') }}">{{ 'Currencies'|trans }}</a>
+    </li>
 </ul>

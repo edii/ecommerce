@@ -28,6 +28,9 @@ trait ToggleableTrait
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function enable()
     {
         $this->enabled = true;
@@ -35,6 +38,9 @@ trait ToggleableTrait
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function disable()
     {
         $this->enabled = false;

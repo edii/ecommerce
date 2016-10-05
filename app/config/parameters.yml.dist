@@ -41,6 +41,7 @@ parameters:
     admin_categories_pagination_count: 20
     admin_manufacturers_pagination_count: 20
     category_products_pagination_count: 24
+    admin_currencies_pagination_count: 20
     search_pagination_count: 24
     admin_users_pagination_count: 20
     admin_user_orders_pagination_count: 10

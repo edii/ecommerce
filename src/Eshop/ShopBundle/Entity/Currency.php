@@ -3,20 +3,21 @@
 namespace Eshop\ShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Eshop\ShopBundle\Traits\TimestampableTrait;
 use Eshop\ShopBundle\Traits\ToggleableTrait;
 use Eshop\ShopBundle\Traits\IdTrait;
+use Eshop\ShopBundle\Traits\NameTrait;
 
 /**
  * Currency
  *
  * @ORM\Table()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="Eshop\ShopBundle\Repository\CurrencyRepository")
  */
 class Currency
 {
-    use IdTrait;
+    use IdTrait, NameTrait;
     use TimestampableTrait, ToggleableTrait;
 
     /**
@@ -29,9 +30,9 @@ class Currency
     /**
      * @var string
      *
-     * @ORM\Column(name="exchangeRate", type="float")
+     * @ORM\Column(name="exchange_rate", type="float", nullable=false)
      */
-    private $exchangeRate;
+    private $exchangeRate = 0.0;
 
     public function __construct()
     {

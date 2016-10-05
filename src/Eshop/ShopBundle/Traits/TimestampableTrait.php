@@ -53,4 +53,21 @@ trait TimestampableTrait
 
         return $this;
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function preCreateChangeDate()
+    {
+        $this->createdAt = $this->createdAt ?: new \DateTime();
+        $this->updatedAt = $this->updatedAt ?: new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdateChangeDate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
 }
