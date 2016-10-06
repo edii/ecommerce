@@ -59,9 +59,6 @@ manufacturer:
         name: Названию
     noproducts: Извините, нет товаров данного производителя!
 
-# currency money
-currency: р.
-
 # Cart buttons and order pages
 cart:
     addtocart: В корзину

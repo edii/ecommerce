@@ -59,9 +59,6 @@ manufacturer:
         name: Name
     noproducts: Sorry, no products of this manufacturer yet!
 
-# currency money
-currency: $
-
 # Cart buttons and order pages
 cart:
     addtocart: Add to cart

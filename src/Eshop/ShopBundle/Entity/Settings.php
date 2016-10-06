@@ -2,6 +2,7 @@
 
 namespace Eshop\ShopBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,23 +27,21 @@ class Settings
      *
      * @ORM\Column(name="show_empty_categories", type="boolean", nullable=true)
      */
-    private $showEmptyCategories;
+    protected $showEmptyCategories;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="show_empty_manufacturers", type="boolean", nullable=true)
      */
-    private $showEmptyManufacturers;
+    protected $showEmptyManufacturers;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Eshop\ShopBundle\Entity\Currency",
-     *     inversedBy="setting"
+     * @ORM\OneToOne(
+     *     targetEntity="Eshop\ShopBundle\Entity\Currency"
      * )
-     * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
      */
-    private $defaultCurrency;
+    protected $defaultCurrency;
 
     /**
      * Get id

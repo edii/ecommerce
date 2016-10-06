@@ -123,10 +123,11 @@ class CartController extends Controller
      */
     public function navbarCartAction(Request $request)
     {
+        $settings = $this->get('app.site_settings');
         $em = $this->getDoctrine()->getManager();
         //quantity -> sum array
         $cartArray = array(
-            'cart' => array('quantity' => 0, 'sum' => 0)
+            'cart' => array('quantity' => 0, 'sum' => 0, 'currency' => $settings->getDefaultCurrency()->getSymbol())
         );
         $cookies = $request->cookies->all();
 

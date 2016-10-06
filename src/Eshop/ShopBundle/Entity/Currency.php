@@ -51,18 +51,9 @@ class Currency
      */
     private $exchangeRate = 0.0;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Eshop\ShopBundle\Entity\Settings",
-     *     mappedBy="defaultCurrency"
-     * )
-     */
-    private $setting;
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->setting = new ArrayCollection();
     }
 
     /**
@@ -138,25 +129,6 @@ class Currency
     public function setSymbol($symbol)
     {
         $this->symbol = $symbol;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSetting()
-    {
-        return $this->setting;
-    }
-
-    /**
-     * @param mixed $setting
-     * @return $this;
-     */
-    public function setSetting($setting)
-    {
-        $this->setting = $setting;
 
         return $this;
     }
