@@ -3,6 +3,7 @@
 namespace Eshop\AdminBundle\Controller;
 
 use Eshop\ShopBundle\Entity\Settings;
+use Eshop\ShopBundle\Form\Type\SettingType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -61,38 +62,15 @@ class SettingsController extends Controller
             $setting = $settingRepository->findOneBy(['id' => $data['id']]);
         }
 
-        var_dump($setting);
-        die('stop');
+        $form = $this->get('form.factory')
+            ->create(SettingType::class, $setting)
+            ->submit($data);
 
+        if ($form->isValid()) {
+            $em->persist($setting);
+            $em->flush();
+        }
 
-//        $em = $this->getDoctrine()->getManager();
-//        $settingRepository = $em->getRepository('ShopBundle:Settings');
-//
-//        die(var_dump($request->request->all()));
-//
-//        $entities = $settingRepository->findAll();
-//        /**
-//         * @var Settings $settings
-//         */
-//        $settings = $entities[0];
-//
-//
-//        $editingSetting = $request->get('editing_setting');
-//        $newValue = $request->request->getBoolean('new_value');
-//
-//        switch ($editingSetting) {
-//            case 'show_empty_categories';
-//                $settings->setShowEmptyCategories($newValue);
-//                break;
-//            case 'show_empty_manufacturers';
-//                $settings->setShowEmptyManufacturers($newValue);
-//                break;
-//        }
-//
-//        $em->flush();
-//
-//        return new JsonResponse(
-//            array('success' => true)
-//        );
+        return $this->redirect($this->generateUrl('admin_settings'));
     }
 }

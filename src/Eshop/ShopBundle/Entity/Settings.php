@@ -55,6 +55,18 @@ class Settings
     }
 
     /**
+     * Set id
+     * @param integer $id
+     * @return integer
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set showEmptyCategories
      *
      * @param boolean $showEmptyCategories

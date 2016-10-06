@@ -1,4 +1,7 @@
 services:
+  shop.form.handler:
+    class: Eshop\ShopBundle\Service\FormHandlerService
+
   app.site_settings:
     class: Eshop\ShopBundle\Service\SettingsService
     arguments:
