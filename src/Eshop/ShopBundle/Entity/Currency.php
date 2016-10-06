@@ -52,12 +52,29 @@ class Currency
     private $exchangeRate = 0.0;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="default_currency", type="boolean")
+     */
+    private $defaultCurrency;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Eshop\ShopBundle\Entity\Settings",
      *     mappedBy="defaultCurrency"
      * )
      */
     private $setting;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Eshop\ShopBundle\Entity\Discount", mappedBy="currency")
+     **/
+    protected $discount;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Eshop\ShopBundle\Entity\Product", mappedBy="currency")
+     **/
+    protected $product;
 
     public function __construct()
     {
@@ -157,6 +174,25 @@ class Currency
     public function setSetting($setting)
     {
         $this->setting = $setting;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDefaultCurrency()
+    {
+        return $this->defaultCurrency;
+    }
+
+    /**
+     * @param boolean $defaultCurrency
+     * @return $this
+     */
+    public function setDefaultCurrency($defaultCurrency)
+    {
+        $this->defaultCurrency = $defaultCurrency;
 
         return $this;
     }

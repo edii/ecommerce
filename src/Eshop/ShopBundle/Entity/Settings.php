@@ -56,7 +56,7 @@ class Settings
 
     /**
      * Set id
-     * @param $id
+     * @param integer $id
      * @return integer
      */
     public function setId($id)

@@ -4,11 +4,11 @@ namespace Eshop\AdminBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Eshop\ShopBundle\Entity\Currency;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Eshop\ShopBundle\Entity\Measure;
 
-class LoadMeasureData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
+class LoadCurrencyData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
     /**
      * @var ContainerInterface
@@ -28,21 +28,15 @@ class LoadMeasureData implements FixtureInterface, ContainerAwareInterface, Orde
      */
     public function load(ObjectManager $manager)
     {
-        $measureArray = array(
-            'Grammes',
-            'Pieces',
-            'Caps',
-            'Ml',
-            'Packs'
-        );
+        $currency = new Currency();
 
-        //create measures
-        foreach ($measureArray as $measureName) {
-            $measure = new Measure();
-            $measure->setName($measureName);
-            $manager->persist($measure);
-        }
+        $currency->setName("Гривня");
+        $currency->setCode("UAH");
+        $currency->setSymbol("грн.");
+        $currency->setDefaultCurrency(true);
+        $currency->setEnabled(true);
 
+        $manager->persist($currency);
         $manager->flush();
     }
 
@@ -51,6 +45,6 @@ class LoadMeasureData implements FixtureInterface, ContainerAwareInterface, Orde
      */
     public function getOrder()
     {
-        return 5; // the order in which fixtures will be loaded
+        return 2; // the order in which fixtures will be loaded
     }
 }

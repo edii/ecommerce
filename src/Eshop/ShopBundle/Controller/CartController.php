@@ -24,6 +24,7 @@ class CartController extends Controller
     public function showCartAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $settings = $this->get('app.site_settings');
         $productRepository = $em->getRepository('ShopBundle:Product');
         $productsArray = array();
         $cart = array();
@@ -59,7 +60,8 @@ class CartController extends Controller
 
         return array(
             'products' => $productsArray,
-            'totalsum' => $totalSum
+            'totalsum' => $totalSum,
+            'currency' => $settings->getDefaultCurrency()->getSymbol(),
         );
     }
 

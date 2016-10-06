@@ -15,26 +15,38 @@ use Eshop\ShopBundle\Traits\IdTrait;
  */
 class Discount
 {
+    const DISCOUNT_PERCENT = 'percent';
+    const DISCOUNT_CASH = 'cash';
+
     use IdTrait;
     use TimestampableTrait, EnableableTrait;
 
     /**
-     * @var float
-     * @ORM\Column(name="discounted_net_amount", type="float")
+     * @var integer
+     * @ORM\Column(name="number", type="integer")
      */
-    protected $discountedNetAmount   = 0.00;
+    protected $number;
+
+    /**
+     * @var string
+     * @ORM\Column(name="type", type="string")
+     */
+    protected $type;
 
     /**
      * @var float
-     * @ORM\Column(name="discounted_gross_amount", type="float")
+     * @ORM\Column(name="amount_discount", type="float")
      */
-    protected $discountedGrossAmount = 0.00;
+    protected $amountDiscount = 0.0;
 
     /**
-     * @var float
-     * @ORM\Column(name="discounted_tax_amount", type="float")
+     * @ORM\ManyToOne(
+     *     targetEntity="Eshop\ShopBundle\Entity\Currency",
+     *     inversedBy="discount"
+     * )
+     * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
      */
-    protected $discountedTaxAmount   = 0.00;
+    protected $currency;
 
     /**
      * @var \DateTime
@@ -49,112 +61,9 @@ class Discount
     protected $validTo               = null;
 
     /**
-     * @var float
-     * @ORM\Column(name="net_amount", type="float")
-     */
-    protected $netAmount    = 0;
-
-    /**
-     * @var float
-     * @ORM\Column(name="gross_amount", type="float")
-     */
-    protected $grossAmount  = 0;
-
-    /**
-     * @var float
-     * @ORM\Column(name="tax_amount", type="float")
-     */
-    protected $taxAmount    = 0;
-
-    /**
-     * @var float
-     * @ORM\Column(name="tax_rate", type="float")
-     */
-    protected $taxRate      = 0;
-
-    /**
-     * @var string
-     * @ORM\Column(name="currency", type="string")
-     */
-    protected $currency     = '';
-
-    protected $exchangeRate = 0;
-
-    /**
-     * @return float
-     */
-    public function getNetAmount()
-    {
-        return $this->netAmount;
-    }
-
-    /**
-     * @param float $netAmount
-     * @return $this
-     */
-    public function setNetAmount($netAmount)
-    {
-        $this->netAmount = $netAmount;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getGrossAmount()
-    {
-        return $this->grossAmount;
-    }
-
-    /**
-     * @param float $grossAmount
-     * @return $this
-     */
-    public function setGrossAmount($grossAmount)
-    {
-        $this->grossAmount = $grossAmount;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getTaxAmount()
-    {
-        return $this->taxAmount;
-    }
-
-    /**
-     * @param float $taxAmount
-     * @return $this
-     */
-    public function setTaxAmount($taxAmount)
-    {
-        $this->taxAmount = $taxAmount;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getTaxRate()
-    {
-        return $this->taxRate;
-    }
-
-    /**
-     * @param float $taxRate
-     * @return $this
-     */
-    public function setTaxRate($taxRate)
-    {
-        $this->taxRate = $taxRate;
-
-        return $this;
-    }
+     * @ORM\OneToMany(targetEntity="Favourites", mappedBy="product")
+     **/
+    protected $product;
 
     /**
      * @return string
@@ -222,18 +131,6 @@ class Discount
     }
 
     /**
-     * @return float
-     */
-    public function getFinalGrossAmount()
-    {
-        if ($this->isDiscountValid()) {
-            return $this->getDiscountedGrossAmount();
-        }
-
-        return $this->getGrossAmount();
-    }
-
-    /**
      * @return bool
      */
     public function isDiscountValid()
@@ -248,20 +145,39 @@ class Discount
     }
 
     /**
-     * @return float
+     * @return int
      */
-    public function getDiscountedGrossAmount()
+    public function getNumber()
     {
-        return $this->discountedGrossAmount;
+        return $this->number;
     }
 
     /**
-     * @param float $discountedGrossAmount
+     * @param int $number
      * @return $this
      */
-    public function setDiscountedGrossAmount($discountedGrossAmount)
+    public function setNumber($number)
     {
-        $this->discountedGrossAmount = $discountedGrossAmount;
+        $this->number = $number;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return $this
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -269,61 +185,18 @@ class Discount
     /**
      * @return float
      */
-    public function getFinalNetAmount()
+    public function getAmountDiscount()
     {
-        if ($this->isDiscountValid()) {
-            return $this->getDiscountedNetAmount();
-        }
-
-        return $this->getNetAmount();
+        return $this->amountDiscount;
     }
 
     /**
-     * @return float
-     */
-    public function getDiscountedNetAmount()
-    {
-        return $this->discountedNetAmount;
-    }
-
-    /**
-     * @param float $discountedNetAmount
+     * @param float $amountDiscount
      * @return $this
      */
-    public function setDiscountedNetAmount($discountedNetAmount)
+    public function setAmountDiscount($amountDiscount)
     {
-        $this->discountedNetAmount = $discountedNetAmount;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getFinalTaxAmount()
-    {
-        if ($this->isDiscountValid()) {
-            return $this->getDiscountedTaxAmount();
-        }
-
-        return $this->getTaxAmount();
-    }
-
-    /**
-     * @return float
-     */
-    public function getDiscountedTaxAmount()
-    {
-        return $this->discountedTaxAmount;
-    }
-
-    /**
-     * @param float $discountedTaxAmount
-     * @return $this
-     */
-    public function setDiscountedTaxAmount($discountedTaxAmount)
-    {
-        $this->discountedTaxAmount = $discountedTaxAmount;
+        $this->amountDiscount = $amountDiscount;
 
         return $this;
     }

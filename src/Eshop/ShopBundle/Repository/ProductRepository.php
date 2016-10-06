@@ -42,13 +42,15 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->innerJoin('p.category', 'ca')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.measure', 'pm')
             ->leftJoin('p.favourites', 'pfa', 'WITH', 'pfa.user = :user') //if liked
             ->leftJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->where('ca = :category')
             ->andWhere('p.quantity <> 0')
             ->andWhere($qb->expr()->neq('p.deleted', 1))
@@ -67,13 +69,15 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->innerJoin('p.manufacturer', 'ma')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.measure', 'pm')
             ->leftJoin('p.favourites', 'pfa', 'WITH', 'pfa.user = :user') //if liked
             ->leftJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->where('ma.id = :manufacturer')
             ->andWhere('p.quantity <> 0')
             ->andWhere($qb->expr()->neq('p.deleted', 1))
@@ -91,12 +95,14 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.measure', 'pm')
             ->innerJoin('p.favourites', 'pfa', 'WITH', 'pfa.user = :user') //only liked
             ->leftJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->andWhere('p.quantity <> 0')
             ->andWhere($qb->expr()->neq('p.deleted', 1))
             ->setParameter('user', $user);
@@ -113,12 +119,14 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.measure', 'pm')
             ->leftJoin('p.favourites', 'pfa', 'WITH', 'pfa.user = :user') //if liked
             ->leftJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->where('p.quantity <> 0')
             ->andWhere($qb->expr()->neq('p.deleted', 1))
             ->setParameter('user', $user);
@@ -143,12 +151,14 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.measure', 'pm')
             ->leftJoin('p.favourites', 'pfa', 'WITH', 'pfa.user = :user') //if liked
             ->leftJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->where('p.quantity <> 0')
             ->andWhere($qb->expr()->neq('p.deleted', 1))
             ->setMaxResults($quantity)
@@ -167,12 +177,14 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.measure', 'pm')
             ->leftJoin('p.favourites', 'pfa', 'WITH', 'pfa.user = :user') //if liked
             ->innerJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->where('p.quantity <> 0')
             ->andWhere($qb->expr()->neq('p.deleted', 1))
             ->setMaxResults($quantity)
@@ -192,12 +204,14 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pfa', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.measure', 'pm')
             ->leftJoin('p.favourites', 'pfa', 'WITH', 'pfa.user = :user') //if liked
             ->leftJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->where('p.quantity <> 0')
             ->andWhere('p.id IN (:ids)')
             ->setMaxResults($quantity)
@@ -220,12 +234,14 @@ class ProductRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select(array('p', 'pi', 'pm', 'pc', 'pfe'))
+        $qb->select(array('p', 'pi', 'pm', 'pc', 'pfe', 'c', 'd'))
             ->from('ShopBundle:Product', 'p')
             ->leftJoin('p.images', 'pi')
             ->leftJoin('p.manufacturer', 'pm')
             ->leftJoin('p.category', 'pc')
             ->leftJoin('p.featured', 'pfe')
+            ->leftJoin('p.currency', 'c')
+            ->leftJoin('p.discounts', 'd')
             ->where($qb->expr()->neq('p.deleted', 1));
 
         return $qb;

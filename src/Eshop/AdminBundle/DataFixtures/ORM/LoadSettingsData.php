@@ -28,9 +28,13 @@ class LoadSettingsData implements FixtureInterface, ContainerAwareInterface, Ord
      */
     public function load(ObjectManager $manager)
     {
+        $repositoryCurrency = $manager->getRepository('ShopBundle:Currency');
+        $defaultCurrency = $repositoryCurrency->findOneBy(['defaultCurrency' => true]);
+
         $settings = new Settings();
         $settings->setShowEmptyCategories(1);
         $settings->setShowEmptyManufacturers(1);
+        $settings->setDefaultCurrency($defaultCurrency);
         $manager->persist($settings);
         $manager->flush();
     }
@@ -40,6 +44,6 @@ class LoadSettingsData implements FixtureInterface, ContainerAwareInterface, Ord
      */
     public function getOrder()
     {
-        return 9;
+        return 10;
     }
 }

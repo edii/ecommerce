@@ -152,6 +152,24 @@ class Product
      */
     private $featured;
 
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Eshop\ShopBundle\Entity\Discount",
+     *     inversedBy="product"
+     * )
+     * @ORM\JoinColumn(name="discount_id", referencedColumnName="id")
+     */
+    private $discounts;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Eshop\ShopBundle\Entity\Currency",
+     *     inversedBy="product"
+     * )
+     * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
+     */
+    private $currency;
+
 //    /**
 //     * @var Price
 //     */
@@ -656,5 +674,43 @@ class Product
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscounts()
+    {
+        return $this->discounts;
+    }
+
+    /**
+     * @param mixed $discounts
+     * @return $this
+     */
+    public function setDiscounts($discounts)
+    {
+        $this->discounts = $discounts;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param mixed $currency
+     * @return $this
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
+
+        return $this;
     }
 }

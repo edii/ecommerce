@@ -33,11 +33,13 @@ class LoadProductData implements FixtureInterface, ContainerAwareInterface, Orde
         $categoryRepository = $manager->getRepository('ShopBundle:Category');
         $manufacturerRepository = $manager->getRepository('ShopBundle:Manufacturer');
         $measureRepository = $manager->getRepository('ShopBundle:Measure');
+        $repositoryCurrency = $manager->getRepository('ShopBundle:Currency');
 
         //get all possible categories, manufacturers, measures
         $categories = $categoryRepository->findAll();
         $manufacturers = $manufacturerRepository->findAll();
         $measures = $measureRepository->findAll();
+        $defaultCurrency = $repositoryCurrency->findOneBy(['defaultCurrency' => true]);
 
         for ($i = 1; $i <= 1000; $i++) {
             $product = new Product();
@@ -56,6 +58,7 @@ class LoadProductData implements FixtureInterface, ContainerAwareInterface, Orde
             $product->setMeasureQuantity(mt_rand(1, 10) * 100);
             $product->setQuantity(mt_rand(1, 10));
             $product->setPrice(mt_rand(1, 1000));
+            $product->setCurrency($defaultCurrency);
 
             $manager->persist($product);
         }
@@ -67,6 +70,6 @@ class LoadProductData implements FixtureInterface, ContainerAwareInterface, Orde
      */
     public function getOrder()
     {
-        return 5; // the order in which fixtures will be loaded
+        return 6; // the order in which fixtures will be loaded
     }
 }

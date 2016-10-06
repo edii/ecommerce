@@ -25,7 +25,7 @@
                 </h4>
             </a>
             <p class="lead price">
-                <span>{{ product.price }}</span> {{ 'currency'|trans }}
+                <span>{{ product.price }}</span> {{ product.currency.symbol }}
             </p>
             <a class="btn btn-success addtocart-btn" href="#">{{ 'cart.addtocart'|trans }}</a>
         </div>

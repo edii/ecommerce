@@ -55,6 +55,6 @@ class LoadStaticPagesData implements FixtureInterface, ContainerAwareInterface, 
      */
     public function getOrder()
     {
-        return 7; // the order in which fixtures will be loaded
+        return 8; // the order in which fixtures will be loaded
     }
 }
