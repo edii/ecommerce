@@ -15,9 +15,9 @@ class CurrencyRepository extends EntityRepository
     public function getAllCurrenciesAdminQB()
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-
         $qb->select(array('c'))
-            ->from('ShopBundle:Currency', 'c');
+            ->from('ShopBundle:Currency', 'c')
+        ;
 
         return $qb;
     }

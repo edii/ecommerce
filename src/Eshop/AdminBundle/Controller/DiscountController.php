@@ -1,0 +1,101 @@
+<?php
+
+namespace Eshop\AdminBundle\Controller;
+
+use Eshop\AdminBundle\Form\Type\DiscountType;
+use Eshop\ShopBundle\Entity\Currency;
+use Eshop\ShopBundle\Entity\Discount;
+use Eshop\ShopBundle\Entity\Settings;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+/**
+ * Discount controller.
+ *
+ * @Route("/admin/discount")
+ */
+class DiscountController extends Controller
+{
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Route(
+     *      "/edit/{discountId}",
+     *      name="admin_discount_init_ajax",
+     *      requirements={"discountId" = "\d+"},
+     *      defaults={"discountId" = null}
+     * )
+     * @param Request $request
+     * @Method({"GET", "POST"})
+     * @return JsonResponse
+     */
+    public function initAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $discountRepository = $em->getRepository('ShopBundle:Discount');
+
+        $discount = new Discount();
+        if ($request->get('relationId')) {
+            $discount->setRelationId($request->request->getInt('relationId'));
+        }
+
+        if ($request->get('id')) {
+            $discount = $discountRepository->find($request->get('id'));
+        }
+
+        return new JsonResponse(
+            $this
+                ->get('shop.form_exporter.service')
+                ->get(
+                    DiscountType::class,
+                    $discount
+                ),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/discount_edit_ajax", name="admin_discount_edit_ajax")
+     * @Method("POST")
+     * @return JsonResponse
+     */
+    public function editAction(Request $request)
+    {
+        $discount = new Discount();
+        $em = $this->getDoctrine()->getManager();
+        $formFactory = $this->get('form.factory');
+        $formHandlerService = $this->get('shop.form.handler');
+
+        $form = $formFactory->create(DiscountType::class, $discount)
+            ->submit($request->request->all());
+
+        $errors = $formHandlerService->getErrorMessages($form);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $productRepository = $em->getRepository('ShopBundle:Product');
+
+            var_dump($form, $discount, $discount->getNumber()); die('stop');
+
+            $em->persist($discount);
+            $product = $productRepository->findOneById($discount->getRelationId());
+            $product->setDiscount($discount->getId());
+
+            $em->persist($discount);
+            $em->flush();
+
+
+            return new JsonResponse([
+                'success' => true
+            ], JsonResponse::HTTP_OK);
+        }
+
+        return new JsonResponse([
+            'errors' => $errors
+        ], JsonResponse::HTTP_BAD_REQUEST);
+    }
+}

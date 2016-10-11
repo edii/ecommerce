@@ -38,12 +38,6 @@ class SettingType extends AbstractType
             ->add('id', HiddenType::class)
             ->add('showEmptyCategories', CheckboxType::class)
             ->add('showEmptyManufacturers', CheckboxType::class)
-            ->add('defaultCurrency', EntityType::class, [
-                'required'  => false,
-                'multiple' => false,
-                'class' => 'Eshop\ShopBundle\Entity\Currency',
-                'choice_label' => 'code'
-            ])
         ;
     }
 

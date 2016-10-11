@@ -2,6 +2,12 @@ services:
   shop.form.handler:
     class: Eshop\ShopBundle\Service\FormHandlerService
 
+  shop.form_exporter.service:
+    class: Eshop\ShopBundle\Service\FromExporterService
+    arguments:
+        - "@jms_serializer"
+        - "@form.factory"
+
   app.site_settings:
     class: Eshop\ShopBundle\Service\SettingsService
     arguments:

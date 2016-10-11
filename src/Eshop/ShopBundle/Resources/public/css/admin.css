@@ -1,0 +1,11 @@
+#img-panel-form {
+    margin: 30px;
+}
+
+#img-panel-form form {
+    min-height: 100px;
+}
+
+#edit-submit {
+    margin-bottom: 30px;
+}

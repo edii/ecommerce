@@ -30,7 +30,7 @@ class LoadCurrencyData implements FixtureInterface, ContainerAwareInterface, Ord
     {
         $currency = new Currency();
 
-        $currency->setName("Гривня");
+        $currency->setName("Гривна");
         $currency->setCode("UAH");
         $currency->setSymbol("грн.");
         $currency->setDefaultCurrency(true);

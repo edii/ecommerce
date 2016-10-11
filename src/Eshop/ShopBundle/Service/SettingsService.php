@@ -54,15 +54,7 @@ class SettingsService
     /**
      * @return bool
      */
-    public function getDefaultCurrency(){
-
-        if ($this->settings->getDefaultCurrency() === null) {
-            $currency = new Currency();
-            $currency->setCode($this->container->getParameter('currency'));
-            $currency->setSymbol($this->container->getParameter('currency_symbol'));
-            $this->settings->setDefaultCurrency($currency);
-        }
-
-        return $this->settings->getDefaultCurrency();
+    public function getDefaultCurrency() {
+        return $this->em->getRepository('ShopBundle:Currency')->findOneBy(['defaultCurrency' => true]);
     }
 }

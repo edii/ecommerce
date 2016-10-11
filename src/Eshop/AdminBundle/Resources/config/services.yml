@@ -1,1 +1,7 @@
-
+services:
+  shop.discount.form:
+      class: Eshop\AdminBundle\Form\Type\DiscountType
+      arguments:
+          - "@router"
+      tags:
+          - { name: form.type }

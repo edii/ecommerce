@@ -36,15 +36,6 @@ class Settings
     private $showEmptyManufacturers;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Eshop\ShopBundle\Entity\Currency",
-     *     inversedBy="setting"
-     * )
-     * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
-     */
-    private $defaultCurrency;
-
-    /**
      * Get id
      *
      * @return integer 
@@ -110,24 +101,5 @@ class Settings
     public function getShowEmptyManufacturers()
     {
         return $this->showEmptyManufacturers;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultCurrency()
-    {
-        return $this->defaultCurrency;
-    }
-
-    /**
-     * @param string $defaultCurrency
-     * @return $this
-     */
-    public function setDefaultCurrency($defaultCurrency)
-    {
-        $this->defaultCurrency = $defaultCurrency;
-
-        return $this;
     }
 }

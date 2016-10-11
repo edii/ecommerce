@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Eshop\ShopBundle\Traits\TimestampableTrait;
 use Eshop\ShopBundle\Traits\EnableableTrait;
 use Eshop\ShopBundle\Traits\IdTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Currency
@@ -24,6 +25,7 @@ class Discount
     /**
      * @var integer
      * @ORM\Column(name="number", type="integer")
+     * @Assert\Type(type="integer")
      */
     protected $number;
 
@@ -61,9 +63,14 @@ class Discount
     protected $validTo               = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="Favourites", mappedBy="product")
+     * @ORM\OneToMany(
+     *     targetEntity="Eshop\ShopBundle\Entity\Product",
+     *     mappedBy="discount"
+     * )
      **/
     protected $product;
+
+    protected $relationId;
 
     /**
      * @return string
@@ -197,6 +204,25 @@ class Discount
     public function setAmountDiscount($amountDiscount)
     {
         $this->amountDiscount = $amountDiscount;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelationId()
+    {
+        return $this->relationId;
+    }
+
+    /**
+     * @param integer $relationId
+     * @return Discount
+     */
+    public function setRelationId($relationId)
+    {
+        $this->relationId = $relationId;
 
         return $this;
     }

@@ -159,7 +159,7 @@ class Product
      * )
      * @ORM\JoinColumn(name="discount_id", referencedColumnName="id")
      */
-    private $discounts;
+    private $discount;
 
     /**
      * @ORM\ManyToOne(
@@ -230,6 +230,18 @@ class Product
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set id
+     * @param integer $id
+     * @return Product
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -679,18 +691,18 @@ class Product
     /**
      * @return mixed
      */
-    public function getDiscounts()
+    public function getDiscount()
     {
-        return $this->discounts;
+        return $this->discount;
     }
 
     /**
-     * @param mixed $discounts
+     * @param mixed $discount
      * @return $this
      */
-    public function setDiscounts($discounts)
+    public function setDiscount($discount)
     {
-        $this->discounts = $discounts;
+        $this->discount = $discount;
 
         return $this;
     }
