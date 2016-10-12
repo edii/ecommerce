@@ -58,8 +58,7 @@ class DiscountType extends AbstractType
                     'attr' => [
                         'translateLabel' => 'number'
                     ]
-                ]
-                )
+                ])
         ;
     }
 

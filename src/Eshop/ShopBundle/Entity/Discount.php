@@ -252,4 +252,15 @@ class Discount
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function __toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'number' => $this->getNumber(),
+        ];
+    }
 }

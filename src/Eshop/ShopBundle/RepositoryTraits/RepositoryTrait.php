@@ -54,24 +54,35 @@ trait RepositoryTrait
     /**
      * Get entity names
      * @param string|bool $where
+     * @param array $fields
      * @return array
      */
-    public function getNamesArray($where = false)
+    public function getArray(array $fields = [], $where = false)
     {
         $result = [];
 
+        $fieldsQuery = [];
+        if (count($fields)) {
+            foreach ($fields as $key => $field) {
+                $fieldsQuery[] = 'REPO.'.$field;
+            }
+        }
+
         try {
             $queryBuilder = $this->createQueryBuilder('REPO')
-                ->select('REPO.name, REPO.id');
+                ->select((count($fieldsQuery))?implode($fieldsQuery, ','):'REPO.name, REPO.id');
 
             if (!empty($where)) {
-                $queryBuilder->where($where);
+                if (is_array($where)) {
+                    foreach ($where as $field => $value) {
+                        $queryBuilder->andWhere('REPO.'.$field.$value['symbol'].$value['param']);
+                    }
+                } else {
+                    $queryBuilder->where($where);
+                }
             }
 
-            $array = $queryBuilder->getQuery()->getResult();
-            foreach ($array as $application) {
-                $result[$application['id']] = $application['name'];
-            }
+            $result = $queryBuilder->getQuery()->getArrayResult();
         } catch (Exception $e) {
             $result['error'] = 'Can\'t get properties of class';
         }

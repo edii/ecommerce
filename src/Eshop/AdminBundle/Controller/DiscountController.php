@@ -77,7 +77,6 @@ class DiscountController extends Controller
         $errors = $formHandlerService->getErrorMessages($form);
         if ($form->isSubmitted() && $form->isValid()) {
             $productRepository = $em->getRepository('ShopBundle:Product');
-            $discountRepository = $em->getRepository('ShopBundle:Discount');
 
             if ($relationId = (int)$discount->getRelationId()) {
                 $product = $productRepository->findOneById($relationId);
@@ -94,7 +93,7 @@ class DiscountController extends Controller
             }
 
             return new JsonResponse([
-                'discounts' => $discountRepository->findBy(['product' => $discount->getRelationId()])
+                'discount' => $discount->__toArray()
             ], JsonResponse::HTTP_OK);
         }
 
