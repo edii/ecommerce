@@ -4,6 +4,7 @@ namespace Eshop\ShopBundle\Form\Type;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -22,8 +23,9 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('id', HiddenType::class)
-            ->add('vendorCode', NumberType::class)
+            ->add('vendorCode', NumberType::class, ['required'  => false])
             ->add('name', TextType::class)
+            ->add('top', CheckboxType::class)
             ->add('slug', TextType::class)
             ->add('description', TextareaType::class)
             ->add('price', NumberType::class)

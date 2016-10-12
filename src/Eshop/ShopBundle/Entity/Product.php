@@ -178,6 +178,12 @@ class Product
     private $currency;
 
     /**
+     * @var boolean
+     * @ORM\Column(name="top", type="boolean")
+     */
+    private $top = false;
+
+    /**
      * @var Collection
      */
     protected $variants;
@@ -729,6 +735,25 @@ class Product
     public function setVendorCode($vendorCode)
     {
         $this->vendorCode = $vendorCode;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTop()
+    {
+        return $this->top;
+    }
+
+    /**
+     * @param boolean $top
+     * @return Product
+     */
+    public function setTop($top)
+    {
+        $this->top = $top;
 
         return $this;
     }
