@@ -69,25 +69,22 @@ class DiscountController extends Controller
     {
         $discount = new Discount();
         $em = $this->getDoctrine()->getManager();
-        $formFactory = $this->get('form.factory');
         $formHandlerService = $this->get('shop.form.handler');
 
-        $form = $formFactory->create(DiscountType::class, $discount)
-            ->submit($request->request->all());
+        $form = $this->createForm(DiscountType::class, $discount);
+        $form->handleRequest($request);
 
         $errors = $formHandlerService->getErrorMessages($form);
         if ($form->isSubmitted() && $form->isValid()) {
             $productRepository = $em->getRepository('ShopBundle:Product');
 
-            var_dump($form, $discount, $discount->getNumber()); die('stop');
-
-            $em->persist($discount);
-            $product = $productRepository->findOneById($discount->getRelationId());
-            $product->setDiscount($discount->getId());
+            if ($relationId = (int)$discount->getRelationId()) {
+                $product = $productRepository->findOneById($relationId);
+                $discount->setProduct($product);
+            }
 
             $em->persist($discount);
             $em->flush();
-
 
             return new JsonResponse([
                 'success' => true

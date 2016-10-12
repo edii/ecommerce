@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Currency
  *
  * @ORM\Table()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="Eshop\ShopBundle\Repository\DiscountRepository")
  */
 class Discount
@@ -20,7 +21,7 @@ class Discount
     const DISCOUNT_CASH = 'cash';
 
     use IdTrait;
-    use TimestampableTrait, EnableableTrait;
+    use TimestampableTrait;
 
     /**
      * @var integer
@@ -31,7 +32,7 @@ class Discount
 
     /**
      * @var string
-     * @ORM\Column(name="type", type="string")
+     * @ORM\Column(name="type", type="string", nullable=true)
      */
     protected $type;
 
@@ -52,25 +53,31 @@ class Discount
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="valid_from", type="datetime")
+     * @ORM\Column(name="valid_from", type="datetime", nullable=true)
      */
     protected $validFrom             = null;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="valid_to", type="datetime")
+     * @ORM\Column(name="valid_to", type="datetime", nullable=true)
      */
     protected $validTo               = null;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Eshop\ShopBundle\Entity\Product",
-     *     mappedBy="discount"
-     * )
-     **/
+     * @ORM\ManyToOne(targetEntity="Eshop\ShopBundle\Entity\Product")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     */
     protected $product;
 
+    /**
+     * @var integer
+     */
     protected $relationId;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      * @return string
@@ -223,6 +230,25 @@ class Discount
     public function setRelationId($relationId)
     {
         $this->relationId = $relationId;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param mixed $product
+     * @return Discount
+     */
+    public function setProduct($product)
+    {
+        $this->product = $product;
 
         return $this;
     }

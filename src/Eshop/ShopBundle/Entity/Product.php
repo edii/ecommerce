@@ -36,12 +36,20 @@ class Product
      */
 
     private $slug;
+
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="vendor_code", type="integer", nullable=true)
+     */
+    private $vendorCode;
 
     /**
      * @var string
@@ -153,11 +161,10 @@ class Product
     private $featured;
 
     /**
-     * @ORM\ManyToOne(
+     * @ORM\OneToMany(
      *     targetEntity="Eshop\ShopBundle\Entity\Discount",
-     *     inversedBy="product"
+     *     mappedBy="product"
      * )
-     * @ORM\JoinColumn(name="discount_id", referencedColumnName="id")
      */
     private $discount;
 
@@ -169,26 +176,6 @@ class Product
      * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
      */
     private $currency;
-
-//    /**
-//     * @var Price
-//     */
-//    protected $buyPrice;
-//
-//    /**
-//     * @var TaxInterface
-//     */
-//    protected $buyPriceTax;
-//
-//    /**
-//     * @var DiscountablePrice
-//     */
-//    protected $sellPrice;
-//
-//    /**
-//     * @var TaxInterface
-//     */
-//    protected $sellPriceTax;
 
     /**
      * @var Collection
@@ -205,6 +192,7 @@ class Product
         $this->quantity = 1;
         $this->deleted = false;
         $this->variants = new ArrayCollection();
+        $this->discount = new ArrayCollection();
     }
 
     public function __toString()
@@ -722,6 +710,25 @@ class Product
     public function setCurrency($currency)
     {
         $this->currency = $currency;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVendorCode()
+    {
+        return $this->vendorCode;
+    }
+
+    /**
+     * @param int $vendorCode
+     * @return Product
+     */
+    public function setVendorCode($vendorCode)
+    {
+        $this->vendorCode = $vendorCode;
 
         return $this;
     }

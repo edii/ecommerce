@@ -47,7 +47,6 @@ class DiscountType extends AbstractType
             ->add('relationId',
                 HiddenType::class,
                 [
-                    'mapped' => false,
                     'attr' => [
                         'translateLabel' => 'relationId',
                         'class' => 'hidden',
