@@ -77,17 +77,24 @@ class DiscountController extends Controller
         $errors = $formHandlerService->getErrorMessages($form);
         if ($form->isSubmitted() && $form->isValid()) {
             $productRepository = $em->getRepository('ShopBundle:Product');
+            $discountRepository = $em->getRepository('ShopBundle:Discount');
 
             if ($relationId = (int)$discount->getRelationId()) {
                 $product = $productRepository->findOneById($relationId);
                 $discount->setProduct($product);
             }
 
-            $em->persist($discount);
-            $em->flush();
+            try {
+                $em->persist($discount);
+                $em->flush();
+            } catch (\Exception $e) {
+                return new JsonResponse([
+                    'errors' => $errors
+                ], JsonResponse::HTTP_BAD_REQUEST);
+            }
 
             return new JsonResponse([
-                'success' => true
+                'discounts' => $discountRepository->findBy(['product' => $discount->getRelationId()])
             ], JsonResponse::HTTP_OK);
         }
 
