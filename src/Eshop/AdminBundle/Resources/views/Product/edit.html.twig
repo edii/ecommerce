@@ -122,7 +122,30 @@
 
     <!-- DISCOUNT -->
     <div class="form-group">
-        <div id="discount-lists"></div>
+        <div id="discount-lists">
+            {% if entity.discount %}
+                <ul>
+                {% for discount in entity.discount %}
+                    <li class="ajax-item">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                {{ discount.amount }}: {{ discount.type }} ({{ discount.validFrom | date("Y-m-d") }} - {{ discount.validTo | date("Y-m-d") }})
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div id="discount-actions">
+                                    <a href="#edit/{{ discount.id }}">Edit</a>
+                                    <a id="ajax-delete"
+                                       ajax-path="{{ path('admin_discount_delete') }}"
+                                       ajax-id="{{ discount.id }}"
+                                       href="#delete/{{ discount.id }}">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
         <button type="button"
                 class="btn btn-primary btn-lg"
                 data-id=""
@@ -212,7 +235,10 @@
     <script src="{{ asset('bundles/shop/js/bootstrap-confirmation.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/shop/js/cart.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/shop/js/summernote.min.js') }}"></script>
+    <script src="{{ asset('bundles/shop/js/moment/moment.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/shop/js/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/shop/js/form.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/shop/js/ajax.js') }}" type="text/javascript"></script>
 
     <script>
         $(document).ready(function () {
@@ -232,7 +258,23 @@
                         modalPopUp.generateForm('init', data);
                         modalPopUp.generateForm('onSubmit', {
                             'onSuccess': function (data) {
-                                console.log(data, 'Edit FORM SUCCESS!');
+
+                                $('#discount-lists ul').append(
+                                    "<li class='ajax-item'>" +
+                                        "<div class='row'>" +
+                                            "<div class='col-lg-6 col-md-6 col-sm-6'>" +
+                                                data.amount + ": " + data.type + " ( " + moment(data.valid_from.date).format('YYYY-MM-DD') + " - " + moment(data.valid_to.date).format('YYYY-MM-DD') + " )" +
+                                            "</div>" +
+                                            "<div class='col-lg-6 col-md-6 col-sm-6'>" +
+                                                "<div id='discount-actions'>" +
+                                                    "<a href='#edit/"+data.id+"'>Edit</a>" +
+                                                    "<a id='ajax-delete' ajax-path='{{ path('admin_discount_delete') }}' ajax-id='"+data.id+"' href='#delete/"+data.id+"'>Remove</a>" +
+                                                "</div>" +
+                                            "</div>" +
+                                        "</div>" +
+                                    "</li>"
+                                );
+
                                 return data;
                             },
                             'onError': function (data) {

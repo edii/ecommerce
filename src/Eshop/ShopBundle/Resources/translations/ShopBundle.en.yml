@@ -71,6 +71,7 @@ cart:
     continue: continue shopping
     yourcart: Your cart
     table:
+        priceDiscount: Discount
         product: Product
         quantity: Quantity
         price: Price

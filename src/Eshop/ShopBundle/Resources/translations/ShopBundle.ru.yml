@@ -71,6 +71,7 @@ cart:
     continue: продолжить покупки
     yourcart: Ваша корзина
     table:
+        priceDiscount: Скидка
         product: Продукт
         quantity: Количество
         price: Цена

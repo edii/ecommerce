@@ -92,13 +92,35 @@ class DiscountController extends Controller
                 ], JsonResponse::HTTP_BAD_REQUEST);
             }
 
-            return new JsonResponse([
-                'discount' => $discount->__toArray()
-            ], JsonResponse::HTTP_OK);
+            return new JsonResponse($discount->__toArray(), JsonResponse::HTTP_OK);
         }
 
         return new JsonResponse([
             'errors' => $errors
         ], JsonResponse::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Deletes a Discount entity.
+     *
+     * @Route("/delete", name="admin_discount_delete")
+     * @Method("POST")
+     */
+    public function deleteAction(Request $request)
+    {
+        $id = $request->request->get('id');
+        $discountRepository = $this->getDoctrine()->getRepository('ShopBundle:Discount');
+
+        if (!empty($id)) {
+            $discountRepository->delete([$id]);
+
+            return new JsonResponse([
+                'success' => true
+            ], JsonResponse::HTTP_OK);
+        } else {
+            return new JsonResponse([
+                'error' => 'Canot empty discount id.'
+            ], JsonResponse::HTTP_BAD_REQUEST);
+        }
     }
 }

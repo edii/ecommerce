@@ -51,7 +51,13 @@
                     ({{ product.measureQuantity }} {{ product.measure.name }})</h1>
 
                 {% if product.quantity > 0 %}
-                    <p class="lead price"><span>{{ product.price }}</span> {{ product.currency.symbol }}</p>
+                    <p class="lead price">
+                        {% if product.getPriceDiscount() > 0 %}
+                            <span class="cd-price">{{ product.getPriceDiscount() }} {{ product.currency.symbol }}</span>
+                        {% endif %}
+
+                        <span class="cd-price {% if product.getPriceDiscount() > 0 %}on-sale{% endif %}">{{ product.price }} {{ product.currency.symbol }}</span>
+                    </p>
 
                     <div class="row addtocart id-row" data-id="{{ product.id }}">
                         <div class="col-md-2">

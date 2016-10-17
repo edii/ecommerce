@@ -24,13 +24,6 @@ class Discount
     use TimestampableTrait;
 
     /**
-     * @var integer
-     * @ORM\Column(name="number", type="integer")
-     * @Assert\Type(type="integer")
-     */
-    protected $number;
-
-    /**
      * @var string
      * @ORM\Column(name="type", type="string", nullable=true)
      */
@@ -38,18 +31,9 @@ class Discount
 
     /**
      * @var float
-     * @ORM\Column(name="amount_discount", type="float")
+     * @ORM\Column(name="amount", type="float")
      */
-    protected $amountDiscount = 0.0;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Eshop\ShopBundle\Entity\Currency",
-     *     inversedBy="discount"
-     * )
-     * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
-     */
-    protected $currency;
+    protected $amount = 0.0;
 
     /**
      * @var \DateTime
@@ -77,25 +61,6 @@ class Discount
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrency()
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @param string $currency
-     * @return $this
-     */
-    public function setCurrency($currency)
-    {
-        $this->currency = $currency;
-
-        return $this;
     }
 
     /**
@@ -159,25 +124,6 @@ class Discount
     }
 
     /**
-     * @return int
-     */
-    public function getNumber()
-    {
-        return $this->number;
-    }
-
-    /**
-     * @param int $number
-     * @return $this
-     */
-    public function setNumber($number)
-    {
-        $this->number = $number;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getType()
@@ -199,18 +145,18 @@ class Discount
     /**
      * @return float
      */
-    public function getAmountDiscount()
+    public function getAmount()
     {
-        return $this->amountDiscount;
+        return $this->amount;
     }
 
     /**
-     * @param float $amountDiscount
+     * @param float $amount
      * @return $this
      */
-    public function setAmountDiscount($amountDiscount)
+    public function setAmount($amount)
     {
-        $this->amountDiscount = $amountDiscount;
+        $this->amount = $amount;
 
         return $this;
     }
@@ -260,7 +206,10 @@ class Discount
     {
         return [
             'id' => $this->getId(),
-            'number' => $this->getNumber(),
+            'amount' => $this->getAmount(),
+            'type' => $this->getType(),
+            'valid_from' => $this->getValidFrom(),
+            'valid_to' => $this->getValidTo(),
         ];
     }
 }

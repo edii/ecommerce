@@ -66,6 +66,12 @@ class Product
     private $price;
 
     /**
+     * @var float
+     *
+     */
+    private $priceDiscount = 0;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="meta_keys", type="text", nullable=true)
@@ -305,6 +311,28 @@ class Product
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Get Price discount
+     * @return float|int
+     */
+    public function getPriceDiscount()
+    {
+        foreach ($this->getDiscount() as $discount) {
+            if ($discount->getType() == Discount::DISCOUNT_PERCENT) {
+                $this->priceDiscount = $this->price - (($this->price * $discount->getAmount())/100);
+            } elseif ($discount->getType() == Discount::DISCOUNT_CASH) {
+                $this->priceDiscount = $this->price - $discount->getAmount();
+            }
+        }
+
+
+        if ($this->priceDiscount < 0) {
+            $this->priceDiscount = 0;
+        }
+
+        return $this->priceDiscount;
     }
 
     /**

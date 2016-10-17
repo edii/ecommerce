@@ -9,3 +9,19 @@
 #edit-submit {
     margin-bottom: 30px;
 }
+
+/* ----------------- // discount ------------------------ */
+#discount-lists {}
+#discount-lists ul {
+    margin: 5px 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+#discount-lists ul > li {
+    margin-bottom: 10px;
+}
+
+#discount-lists ul > li > #discount-actions {
+
+}

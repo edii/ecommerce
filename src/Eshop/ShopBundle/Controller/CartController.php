@@ -46,13 +46,22 @@ class CartController extends Controller
 
                 $quantity = abs((int)$productQuantity);
                 $price = $product->getPrice();
+                $priceDiscount = $product->getPriceDiscount();
                 $sum = $price * $quantity;
+                $sumDiscount = $priceDiscount * $quantity;
 
                 $productPosition['product'] = $product;
                 $productPosition['quantity'] = $quantity;
                 $productPosition['price'] = $price;
+                $productPosition['symbol'] = $product->getCurrency()->getSymbol();
+
+                $productPosition['priceDiscount'] = $priceDiscount;
+                $productPosition['discount'] = $product->getDiscount();
+
                 $productPosition['sum'] = $sum;
-                $totalSum += $sum;
+                $productPosition['sumDiscount'] = $sumDiscount;
+
+                $totalSum += ($sumDiscount > 0)?$sumDiscount:$sum;
 
                 $productsArray[] = $productPosition;
             }
@@ -128,9 +137,13 @@ class CartController extends Controller
         $settings = $this->get('app.site_settings');
         $em = $this->getDoctrine()->getManager();
         //quantity -> sum array
-        $cartArray = array(
-            'cart' => array('quantity' => 0, 'sum' => 0, 'currency' => $settings->getDefaultCurrency()->getSymbol())
-        );
+        $cartArray = [
+            'cart' => [
+                'quantity' => 0,
+                'sum' => 0,
+                'currency' => $settings->getDefaultCurrency()->getSymbol()
+            ]
+        ];
         $cookies = $request->cookies->all();
 
         if (isset($cookies['cart'])) {
@@ -150,7 +163,7 @@ class CartController extends Controller
              */
             $product = $productRepository->find((int)$productId);
             if (is_object($product)) {
-                $cartArray['cart']['sum'] += ($product->getPrice() * abs((int)$productQuantity));
+                $cartArray['cart']['sum'] += (($product->getPriceDiscount() > 0) ? $product->getPriceDiscount() : $product->getPrice() * abs((int)$productQuantity));
                 $cartArray['cart']['quantity'] += abs((int)$productQuantity);
             }
         }

@@ -2,10 +2,13 @@
 
 namespace Eshop\AdminBundle\Form\Type;
 
+use Eshop\ShopBundle\Entity\Discount;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -52,12 +55,44 @@ class DiscountType extends AbstractType
                         'class' => 'hidden',
                     ],
                 ])
-            ->add('number',
+            ->add('amount',
                 IntegerType::class,
                 [
                     'attr' => [
-                        'translateLabel' => 'number'
+                        'translateLabel' => 'Amount'
                     ]
+                ])
+            ->add('type',
+                ChoiceType::class,
+                [
+                    'label' => 'Type',
+                    'choices' => [
+                        Discount::DISCOUNT_PERCENT => Discount::DISCOUNT_PERCENT,
+                        Discount::DISCOUNT_CASH => Discount::DISCOUNT_CASH
+                    ],
+                    'attr' => [
+                        'translateLabel' => 'type'
+                    ]
+                ])
+            ->add('validFrom',
+                DateTimeType::class,
+                [
+                    'widget' => 'single_text',
+                    'date_format' => 'MM-dd-yyyy', // HH:mm
+                    'placeholder' => array(
+                        'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                        'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
+                    )
+                ])
+            ->add('validTo',
+                DateTimeType::class,
+                [
+                    'widget' => 'single_text',
+                    'date_format' => 'MM-dd-yyyy', // HH:mm
+                    'placeholder' => array(
+                        'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                        'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
+                    )
                 ])
         ;
     }

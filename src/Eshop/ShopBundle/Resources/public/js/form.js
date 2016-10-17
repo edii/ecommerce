@@ -8,7 +8,9 @@
         },
         _templateItem = {
             'hidden': "<input type='hidden' name='{name}' value='{value}' class='{attrClass}' />",
-            'integer': "<input type='text' name='{name}' value='{value}' class='{attrClass}' />"
+            'integer': "<input type='text' name='{name}' value='{value}' class='{attrClass}' />",
+            'choice': "<select name='{name}'>{options}</select>",
+            'datetime': "<input type='text' class='form-control datetime' id='{id}' name='{name}' value='{value}'/>"
         },
         rowItem = '<div class="row {attrRowClass}"><div class="col-lg-2"><label>{label}</label></div><div class="col-lg-10">{element}</div></div>',
         defaultValues = {}
@@ -42,6 +44,12 @@
             });
 
             $(this).html( _templateForm );
+
+            // datatime
+            $('.datetime').datetimepicker({
+                format: 'MM-DD-YYYY' // HH:mm
+            });
+
         },
 
         convertCamelCase: function(str) {
@@ -74,24 +82,48 @@
                 item = {'label': '', 'element': '', 'attrRowClass': ''};
 
             $.each(element, function(key, value) {
+
                 if (key == "vars") {
                     if (itemTemplate = methods.getTemplateElement(value.block_prefixes[1])) {
                         var defaultValue = methods.getDefaultValue(methods.convertCamelCase(value.name));
+                        var params = {
+                            'name': value.full_name,
+                            'value': (value.value !== "")?value.value:(defaultValue)?defaultValue:'',
+                            'attrClass': (value.attr.class)?value.attr.class:''
+                        };
+
+                        if (value.block_prefixes[1] == 'choice') {
+                            $.extend(params, {
+                                'options': methods.getTemplateOptions(value.choices)
+                            });
+                        }
+
+                        if (typeof value.type !== 'undefined' && value.type == 'datetime') {
+                            $.extend(params, {
+                                'id': value.id
+                            });
+                        }
+
                         item.attrRowClass = (value.attr.rowClass) ? value.attr.rowClass : value.block_prefixes[1];
                         item.label = (value.attr.translateLabel) ? value.attr.translateLabel : '';
                         item.element = methods.replaceAll(
                             itemTemplate,
-                            {
-                                'name': value.full_name,
-                                'value': (value.value !== "")?value.value:(defaultValue)?defaultValue:'',
-                                'attrClass': (value.attr.class)?value.attr.class:''
-                            }
+                            params
                         );
                     }
                 }
             });
 
             return methods.replaceAll(rowItem, item);
+        },
+
+        getTemplateOptions: function (options) {
+            var result = '';
+            $.each(options, function(key, data){
+                result += '<option name="'+data.value+'">'+data.label+'</option>';
+            });
+
+            return result;
         },
 
         getTemplateElement: function(id) {

@@ -243,3 +243,49 @@ body {
     right: 20px;
     font-size: 1.5em;
 }
+
+/* ------------------ // PRICE --------------- */
+.cd-price {
+    /*color: #a5d05e;*/
+    position: relative;
+    margin-left: 10px;
+    -webkit-transition: color 0.2s;
+    -moz-transition: color 0.2s;
+    transition: color 0.2s;
+    font-weight: bold;
+}
+.cd-price.on-cart-sale {
+    text-decoration: line-through;
+    font-size: 14px;
+}
+.cd-price.on-sale,
+.cd-price.on-cart-sale {
+    color: #a5d05e;
+}
+.cd-price.on-sale::after {
+    opacity: 1;
+    width: 100%;
+    -webkit-transition: width 0.2s 0s, opacity 0s 0s;
+    -moz-transition: width 0.2s 0s, opacity 0s 0s;
+    transition: width 0.2s 0s, opacity 0s 0s;
+}
+
+.cd-price::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    bottom: auto;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background-color: #a5d05e;
+    opacity: 0;
+    -webkit-transition: width 0.2s 0s, opacity 0s 0.2s;
+    -moz-transition: width 0.2s 0s, opacity 0s 0.2s;
+    transition: width 0.2s 0s, opacity 0s 0.2s;
+}

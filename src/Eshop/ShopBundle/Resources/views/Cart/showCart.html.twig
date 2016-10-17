@@ -22,6 +22,7 @@
                         <th>{{ 'cart.table.quantity'|trans }}</th>
                         <th></th>
                         <th>{{ 'cart.table.price'|trans }}</th>
+                        <th>{{ 'cart.table.priceDiscount'|trans }}</th>
                         <th style="text-align: right;">{{ 'cart.table.sum'|trans }}</th>
                     </tr>
                     </thead>
@@ -62,11 +63,24 @@
                                     <i class="icon-trash icon-white"></i>
                                 </a>
                             </td>
+                            <td class="col-md-3 price">
+                                {% if product.priceDiscount %}
+                                    <span class="cd-price">{{ product.priceDiscount }} {{ product.symbol }}</span>
+                                {% endif %}
+                                <span class="cd-price {% if product.priceDiscount %}on-cart-sale{% endif %}">{{ product.price }} {{ product.symbol }}</span>
+                            </td>
+
                             <td class="col-md-1 price">
-                                <span>{{ product.price }}</span>
+                                {% if product.product.getDiscount() %}
+                                    {% for discount in product.product.getDiscount() %}
+                                        <span> -{{ discount.amount }} ({{ discount.type | discount }})</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <span>-</span>
+                                {% endif %}
                             </td>
                             <td class="col-md-1 sum" style="text-align: right">
-                                {{ product.sum }}
+                               {% if product.sumDiscount > 0 %} {{ product.sumDiscount }} {% else %} {{ product.sum }} {% endif %} {{ product.symbol }}
                             </td>
                         </tr>
                     {% endfor %}

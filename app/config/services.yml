@@ -93,6 +93,12 @@ services:
         tags:
             - { name: twig.extension }
 
+    discount.twig_extension:
+        class:        Eshop\ShopBundle\Twig\DiscountExtension
+        public:       false
+        tags:
+            - { name: twig.extension }
+
     enabled.twig_extension:
         class:        Eshop\ShopBundle\Twig\EnabledExtension
         public:       false

@@ -25,7 +25,11 @@
                 </h4>
             </a>
             <p class="lead price">
-                <span>{{ product.price }}</span> {{ product.currency.symbol }}
+                {% if product.getPriceDiscount() > 0 %}
+                    <span class="cd-price">{{ product.getPriceDiscount() }} {{ product.currency.symbol }}</span>
+                {% endif %}
+
+                <span class="cd-price {% if product.getPriceDiscount() > 0 %}on-sale{% endif %}">{{ product.price }} {{ product.currency.symbol }}</span>
             </p>
             <a class="btn btn-success addtocart-btn" href="#">{{ 'cart.addtocart'|trans }}</a>
         </div>
